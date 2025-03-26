@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv"
+import userRoute from "../api/routes/user.route.js"
 
 
 dotenv.config({
@@ -27,6 +28,8 @@ connectDB().then(()=>{
     })
 
 })
+
+app.use("/api/user" , userRoute)
 
 
 
