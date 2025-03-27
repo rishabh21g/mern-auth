@@ -2,13 +2,14 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv"
 import userRoute from "../api/routes/user.route.js"
+import authRoute from "../api/routes/auth.route.js"
 
 
 dotenv.config({
     path:"./.env"
 })
-const app = express()
-console.log(process.env.MONGO)
+const app = express();
+app.use(express.json());
 
 
 const connectDB = async ()=>{
@@ -17,7 +18,7 @@ const connectDB = async ()=>{
       console.log("Success", connectionInstance.connection.host)
     
     }catch(err){
-        console.error("ERROR" , err.message)
+        console.error("ERROR: " , err.message)
         process.exit(1)
     }
 
@@ -30,19 +31,7 @@ connectDB().then(()=>{
 })
 
 app.use("/api/user" , userRoute)
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.use("/api/auth" , authRoute)
 
 
 app.listen(3000 , ()=>{
