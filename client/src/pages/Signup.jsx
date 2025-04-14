@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const Signup = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleChange = (event) => {
     setFormData((prevFormData) => {
@@ -17,6 +18,7 @@ const Signup = () => {
     event.preventDefault();
     try {
       setLoading(true);
+      setError(false)
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
@@ -25,21 +27,30 @@ const Signup = () => {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log(data);
+      console.log(data)
+      if(!data.success){
+        setLoading(false)
+        setError(true)
+      }
     } catch (err) {
-      console.log(err);
+      setLoading(false);
+      setError(true)
+      console.log(err)
+  
     } finally {
       setLoading(false);
+      
+      
     }
   };
 
   return (
     <>
       {loading ? (
-        <div class="flex flex-row gap-2 w-full h-full items-center justify-center mx-auto my-auto z-30 fixed">
-          <div class="w-4 h-4 rounded-full bg-black animate-bounce [animation-delay:.7s]"></div>
-          <div class="w-4 h-4 rounded-full bg-black animate-bounce [animation-delay:.3s]"></div>
-          <div class="w-4 h-4 rounded-full bg-black animate-bounce [animation-delay:.7s]"></div>
+        <div className="flex flex-row gap-2 w-full h-full items-center justify-center mx-auto my-auto z-30 fixed">
+          <div className="w-4 h-4 rounded-full bg-black animate-bounce [animation-delay:.7s]"></div>
+          <div className="w-4 h-4 rounded-full bg-black animate-bounce [animation-delay:.3s]"></div>
+          <div className="w-4 h-4 rounded-full bg-black animate-bounce [animation-delay:.7s]"></div>
         </div>
       ) : (
         <div className="w-full max-w-lg px-3 mx-auto  md:flex-0 shrink-0 border border-gray-900 rounded-lg my-8 mt-16">
@@ -86,6 +97,7 @@ const Signup = () => {
                 <button
                   className="inline-block w-full px-6 py-3 mt-6 mb-2 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer active:opacity-85 hover:scale-102 hover:shadow-soft-xs leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 bg-gradient-to-tl from-gray-900 to-slate-800 hover:border-slate-700 hover:bg-slate-700 hover:text-white"
                   type="button"
+                  disabled={loading}
                   onClick={handleSubmit}
                 >
                   Sign up
@@ -96,6 +108,9 @@ const Signup = () => {
                 <Link className="font-bold text-slate-700" to="/sign-in">
                   Sign in
                 </Link>
+              </p>
+              <p className="text-red-700 my-5 font-bold text-center text-lg">
+                {error &&  "Something went wrong"}
               </p>
             </form>
           </div>
